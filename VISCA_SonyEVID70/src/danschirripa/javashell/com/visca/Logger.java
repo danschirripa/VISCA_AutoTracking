@@ -1,4 +1,4 @@
-package dschirripa.onediversified.com.visca;
+package danschirripa.javashell.com.visca;
 
 import java.io.OutputStream;
 import java.io.PrintStream;

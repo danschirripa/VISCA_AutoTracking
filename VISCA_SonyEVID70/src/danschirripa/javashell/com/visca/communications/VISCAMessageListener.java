@@ -1,10 +1,10 @@
-package dschirripa.onediversified.com.visca.communications;
+package danschirripa.javashell.com.visca.communications;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortMessageListener;
 
-import dschirripa.onediversified.com.visca.Logger;
+import danschirripa.javashell.com.visca.Logger;
 
 public class VISCAMessageListener implements SerialPortMessageListener {
 	private Logger logger = new Logger("VISCA", 1);

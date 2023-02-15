@@ -1,4 +1,4 @@
-package dschirripa.onediversified.com.visca;
+package danschirripa.javashell.com.visca;
 
 import java.io.File;
 import java.util.stream.Stream;
@@ -10,7 +10,7 @@ import org.opencv.core.Core;
 import com.sun.jna.Platform;
 import com.sun.jna.platform.win32.Kernel32;
 
-import dschirripa.onediversified.com.visca.gui.ViscaControllerFrame;
+import danschirripa.javashell.com.visca.gui.ViscaControllerFrame;
 
 public class Main {
 

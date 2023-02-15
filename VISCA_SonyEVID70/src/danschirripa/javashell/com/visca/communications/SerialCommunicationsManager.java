@@ -1,4 +1,4 @@
-package dschirripa.onediversified.com.visca.communications;
+package danschirripa.javashell.com.visca.communications;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.io.OutputStream;
 
 import com.fazecast.jSerialComm.SerialPort;
 
-import dschirripa.onediversified.com.visca.Logger;
+import danschirripa.javashell.com.visca.Logger;
 
 public class SerialCommunicationsManager {
 	private Logger log = new Logger("SerialPort", 0);

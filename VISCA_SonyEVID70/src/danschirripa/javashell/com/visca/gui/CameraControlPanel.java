@@ -1,4 +1,4 @@
-package dschirripa.onediversified.com.visca.gui;
+package danschirripa.javashell.com.visca.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,8 +13,8 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import dschirripa.onediversified.com.visca.communications.SerialCommunicationsManager;
-import dschirripa.onediversified.com.visca.communications.VISCA;
+import danschirripa.javashell.com.visca.communications.SerialCommunicationsManager;
+import danschirripa.javashell.com.visca.communications.VISCA;
 
 public class CameraControlPanel extends JPanel {
 

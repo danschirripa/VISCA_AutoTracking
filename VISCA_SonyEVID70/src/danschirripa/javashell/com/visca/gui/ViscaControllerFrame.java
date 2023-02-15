@@ -1,4 +1,4 @@
-package dschirripa.onediversified.com.visca.gui;
+package danschirripa.javashell.com.visca.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -40,8 +40,8 @@ import org.opencv.videoio.VideoCapture;
 
 import com.fazecast.jSerialComm.SerialPort;
 
-import dschirripa.onediversified.com.visca.communications.SerialCommunicationsManager;
-import dschirripa.onediversified.com.visca.communications.VISCA;
+import danschirripa.javashell.com.visca.communications.SerialCommunicationsManager;
+import danschirripa.javashell.com.visca.communications.VISCA;
 
 public class ViscaControllerFrame extends JFrame {
 	private SerialCommunicationsManager man;

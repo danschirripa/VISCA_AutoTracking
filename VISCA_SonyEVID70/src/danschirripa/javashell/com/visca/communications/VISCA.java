@@ -1,4 +1,4 @@
-package dschirripa.onediversified.com.visca.communications;
+package danschirripa.javashell.com.visca.communications;
 
 public class VISCA {
 
