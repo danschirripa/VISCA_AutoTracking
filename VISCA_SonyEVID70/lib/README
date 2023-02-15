@@ -1,2 +1,4 @@
 GStreamer Libraries provided from https://github.com/gstreamer-java/
 jSerialComm Library provided from https://fazecast.github.io/jSerialComm/
+OpenCV Library provided from https://github.com/opencv/opencv.git
+  Included version compiled on Arch Linux (6.1.9-arch1-1) against OpenJDK 8
