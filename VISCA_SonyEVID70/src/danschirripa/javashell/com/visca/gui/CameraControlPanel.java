@@ -4,12 +4,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -37,9 +40,40 @@ public class CameraControlPanel extends JPanel {
 
 		viscaCommands[5] = VISCA.zoomCommand(VISCA.PTZ_IN, (byte) -1);
 		viscaCommands[6] = VISCA.zoomCommand(VISCA.PTZ_OUT, (byte) -1);
+
+		ImageIcon[] icons = new ImageIcon[7];
+		try {
+			icons[0] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Left_Icon.png"))
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			icons[1] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Up_Icon.png")).getScaledInstance(50,
+					50, Image.SCALE_SMOOTH));
+			icons[2] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Right_Icon.png"))
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			icons[3] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Down_Icon.png"))
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			icons[4] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/House_Icon.png"))
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			icons[5] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Plus_Icon.png"))
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			icons[6] = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Minus_Icon.png"))
+					.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		ptzButtons = new JButton[7];
 		for (int i = 0; i < ptzButtons.length; i++) {
-			JButton ptzButton = new JButton();
+			ImageIcon icon = icons[i];
+
+			JButton ptzButton;
+
+			if (icon != null) {
+				ptzButton = new JButton(icon);
+				ptzButton.setBackground(new Color(0, 0, 0, 0));
+				ptzButton.setBorderPainted(false);
+			} else
+				ptzButton = new JButton();
+
 			int command = i;
 			ptzButton.addMouseListener(new MouseListener() {
 
@@ -124,6 +158,7 @@ public class CameraControlPanel extends JPanel {
 		add(ptzButtons[6], c);
 
 		JButton autoTrackButton = new JButton();
+		autoTrackButton.setBackground(Color.red);
 		autoTrackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (autoTrackButton.getBackground() == Color.red) {

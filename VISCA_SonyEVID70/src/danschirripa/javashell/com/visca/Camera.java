@@ -49,7 +49,7 @@ public class Camera {
 		System.out.println();
 		System.out.println(changeX + " : " + changeY);
 
-		return VISCA.relativePtCommand(changeX, changeY, (byte) 0x12);
+		return VISCA.relativePtCommand(changeX, changeY, (byte) 0x17);
 	}
 
 }

@@ -14,7 +14,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,7 +61,20 @@ public class ViscaControllerFrame extends JFrame {
 		SerialPort[] ports = SerialPort.getCommPorts();
 		String[] portNames = new String[ports.length];
 
-		classifier.load("resources/haarcascade_frontalface_default.xml");
+		InputStream cascadeInput = getClass().getResourceAsStream("/haarcascade_frontalface_default.xml");
+
+		try {
+			File tmpFile = File.createTempFile("cascade", ".xml");
+			FileOutputStream tmpOut = new FileOutputStream(tmpFile);
+			tmpOut.write(cascadeInput.readAllBytes());
+			tmpOut.flush();
+			tmpOut.close();
+			classifier.load(tmpFile.getAbsolutePath());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Failed to load cascade classifier");
+			System.exit(-1);
+		}
 
 		int i = 0;
 		for (SerialPort port : ports) {
