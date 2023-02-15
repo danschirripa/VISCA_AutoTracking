@@ -10,6 +10,7 @@ import org.opencv.core.Core;
 import com.sun.jna.Platform;
 import com.sun.jna.platform.win32.Kernel32;
 
+import danschirripa.javashell.com.visca.communications.CameraTypeManager;
 import danschirripa.javashell.com.visca.gui.ViscaControllerFrame;
 
 public class Main {
@@ -20,10 +21,10 @@ public class Main {
 		configurePaths();
 		Gst.init(Version.BASELINE, "VISCA Interface", args);
 
+		CameraTypeManager.loadCameraTypes();
 		new ViscaControllerFrame();
 
 		Gst.main();
-
 
 	}
 

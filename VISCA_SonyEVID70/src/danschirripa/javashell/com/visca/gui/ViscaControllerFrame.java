@@ -15,10 +15,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -26,8 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import org.freedesktop.gstreamer.device.Device;
-import org.freedesktop.gstreamer.device.DeviceMonitor;
 import org.freedesktop.gstreamer.swing.GstVideoComponent;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
@@ -40,6 +38,8 @@ import org.opencv.videoio.VideoCapture;
 
 import com.fazecast.jSerialComm.SerialPort;
 
+import danschirripa.javashell.com.visca.Camera;
+import danschirripa.javashell.com.visca.communications.CameraTypeManager;
 import danschirripa.javashell.com.visca.communications.SerialCommunicationsManager;
 import danschirripa.javashell.com.visca.communications.VISCA;
 
@@ -50,6 +50,7 @@ public class ViscaControllerFrame extends JFrame {
 	private boolean doAutoTrack = false;
 	private Point lastCenterPoint = null;
 	private double distanceRange = 20;
+	private Camera cam;
 
 	public ViscaControllerFrame() {
 		thisFrame = this;
@@ -78,12 +79,16 @@ public class ViscaControllerFrame extends JFrame {
 
 		});
 
+		String[] camTypes = CameraTypeManager.getCameraTypes();
+
 		JComboBox<String> serialSelections = new JComboBox<String>(portNames);
 		JComboBox<String> cameraSelection = new JComboBox<String>(devs);
+		JComboBox<String> cameraTypeSelection = new JComboBox<String>(camTypes);
 
 		JButton okButton = new JButton("Ok");
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				cam = CameraTypeManager.getCamera(camTypes[cameraTypeSelection.getSelectedIndex()]);
 				startInterface(ports[serialSelections.getSelectedIndex()], devs[cameraSelection.getSelectedIndex()]);
 				selectionFrame.dispose();
 			}
@@ -95,7 +100,12 @@ public class ViscaControllerFrame extends JFrame {
 				System.exit(0);
 			}
 		});
-		JPanel selectionPanel = new JPanel(new BorderLayout());
+		JPanel selectionPanel = new JPanel();
+		selectionPanel.setLayout(new BoxLayout(selectionPanel, BoxLayout.PAGE_AXIS));
+
+		JPanel cameraTypeSelectionPanel = new JPanel(new BorderLayout());
+		cameraTypeSelectionPanel.add(new JLabel("Select Camera Type: "), BorderLayout.WEST);
+		cameraTypeSelectionPanel.add(cameraTypeSelection, BorderLayout.CENTER);
 
 		JPanel serialSelectionPanel = new JPanel(new BorderLayout());
 		serialSelectionPanel.add(new JLabel("Select Communications Interface: "), BorderLayout.WEST);
@@ -109,14 +119,15 @@ public class ViscaControllerFrame extends JFrame {
 		confirmationPanel.add(cancelButton);
 		confirmationPanel.add(okButton);
 
-		selectionPanel.add(serialSelectionPanel, BorderLayout.NORTH);
-		selectionPanel.add(deviceSelectionPanel, BorderLayout.CENTER);
-		selectionPanel.add(confirmationPanel, BorderLayout.SOUTH);
+		selectionPanel.add(cameraTypeSelectionPanel);
+		selectionPanel.add(serialSelectionPanel);
+		selectionPanel.add(deviceSelectionPanel);
+		selectionPanel.add(confirmationPanel);
 
 		selectionFrame.setContentPane(selectionPanel);
 
 		selectionFrame.setVisible(true);
-		selectionFrame.setSize(400, 125);
+		selectionFrame.setSize(400, 150);
 	}
 
 	private static Image camPreviewImg = null;
@@ -225,10 +236,9 @@ public class ViscaControllerFrame extends JFrame {
 				centerPoint = nCenterPoint;
 			}
 		}
-		if (lastCenterPoint == null)
-			lastCenterPoint = centerPoint;
+		lastCenterPoint = centerPoint;
 		System.out.println("Face @ " + centerPoint.toString());
-		determinePTZAdjustment(centerPoint);
+		man.sendCommand(cam.determinePTZAdjustment(centerPoint));
 	}
 
 	private boolean isInRange(Point p) {
@@ -239,39 +249,6 @@ public class ViscaControllerFrame extends JFrame {
 		if (dist <= distanceRange)
 			return true;
 		return false;
-	}
-
-	private int absCenterX = 400, absCenterY = 300;
-
-	private void determinePTZAdjustment(Point centerPoint) {
-		int x = centerPoint.x;
-		int y = centerPoint.y;
-		int deltaX = x - absCenterX;
-		int deltaY = y - absCenterY;
-
-		if ((deltaX < 20 && deltaX > -20) && (deltaY < 20 && deltaY > -20)) {
-			man.sendCommand(VISCA.PT_STOP);
-			return;
-		}
-
-		int changeX, changeY;
-
-		if (deltaX > 0)
-			changeX = 3;
-		else
-			changeX = -3;
-
-		if (deltaY > 0)
-			changeY = -3;
-		else
-			changeY = 3;
-
-		System.out.println();
-		System.out.println(deltaX + " : " + deltaY);
-
-		man.sendCommand(VISCA.PT_STOP);
-		man.sendCommand(VISCA.directPtCommand(changeX, changeY, (byte) 0x12));
-		lastCenterPoint = centerPoint;
 	}
 
 	private static BufferedImage matToBufferedImage(Mat original) {

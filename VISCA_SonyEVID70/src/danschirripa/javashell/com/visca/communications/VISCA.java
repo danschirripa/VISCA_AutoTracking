@@ -133,6 +133,80 @@ public class VISCA {
 		command[0] = (byte) 0x81;
 		command[1] = (byte) 0x01;
 		command[2] = (byte) 0x06;
+		command[3] = (byte) 0x02;
+		command[4] = speed;
+		command[5] = speed;
+		String panHexString = Integer.toHexString(pan);
+		char[] hexBytePlaces = panHexString.toCharArray();
+
+		byte[] panBytes = new byte[4];
+
+		int lengthDelta = 0;
+		if (hexBytePlaces.length < 4) {
+			lengthDelta = 4 - hexBytePlaces.length;
+			for (int i = 0; i < lengthDelta; i++)
+				panBytes[i] = (byte) 0x00;
+		}
+
+		if (hexBytePlaces.length > 4) {
+			char[] tmp = new char[4];
+			for (int i = 0; i < 4; i++) {
+				tmp[i] = hexBytePlaces[i + 4];
+			}
+			hexBytePlaces = tmp;
+		}
+
+		for (int i = lengthDelta; i < panBytes.length; i++) {
+			panBytes[i] = (byte) Integer.parseInt("0" + hexBytePlaces[i - lengthDelta], 16);
+		}
+
+		String tiltHexString = Integer.toHexString(tilt);
+		hexBytePlaces = tiltHexString.toCharArray();
+
+		byte[] tiltBytes = new byte[4];
+
+		lengthDelta = 0;
+		if (hexBytePlaces.length < 4) {
+			lengthDelta = 4 - hexBytePlaces.length;
+			for (int i = 0; i < lengthDelta; i++)
+				tiltBytes[i] = (byte) 0x00;
+		}
+
+		if (hexBytePlaces.length > 4) {
+			char[] tmp = new char[4];
+			for (int i = 0; i < 4; i++) {
+				tmp[i] = hexBytePlaces[i + 4];
+			}
+			hexBytePlaces = tmp;
+		}
+
+		for (int i = lengthDelta; i < tiltBytes.length; i++) {
+			tiltBytes[i] = (byte) Integer.parseInt("0" + hexBytePlaces[i - lengthDelta], 16);
+		}
+
+		for (int i = 0; i < 4; i++)
+			command[i + 6] = panBytes[i];
+
+		for (int i = 0; i < 4; i++)
+			command[i + 10] = tiltBytes[i];
+
+		command[14] = (byte) 0xFF;
+
+		String result = "";
+		for (byte b : command) {
+			result += String.format("%02X", b) + " ";
+		}
+		System.out.println(result);
+
+		return command;
+	}
+	
+	// -2267 - 0 - 2267 is range for full Pan
+	public static byte[] relativePtCommand(int pan, int tilt, byte speed) {
+		byte[] command = new byte[15];
+		command[0] = (byte) 0x81;
+		command[1] = (byte) 0x01;
+		command[2] = (byte) 0x06;
 		command[3] = (byte) 0x03;
 		command[4] = speed;
 		command[5] = speed;
