@@ -37,11 +37,6 @@ public class Camera {
 		}
 
 		int changeX, changeY;
-		/*
-		 * if (deltaX > 0) changeX = 3; else changeX = -3;
-		 * 
-		 * if (deltaY > 0) changeY = -3; else changeY = 3;
-		 */
 		changeX = (deltaX * horizontalAngularChangeMaximum) / imgCenterX;
 		changeY = (deltaY * verticalAngularChangeMaximum) / imgCenterY;
 
@@ -50,6 +45,14 @@ public class Camera {
 		System.out.println(changeX + " : " + changeY);
 
 		return VISCA.relativePtCommand(changeX, changeY, (byte) 0x17);
+	}
+
+	public int getWidth() {
+		return maximumX;
+	}
+
+	public int getHeight() {
+		return maximumY;
 	}
 
 }

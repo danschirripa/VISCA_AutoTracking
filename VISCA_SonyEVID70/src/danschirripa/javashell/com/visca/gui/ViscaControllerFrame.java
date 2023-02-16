@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -13,13 +14,16 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -40,6 +44,7 @@ import org.opencv.videoio.VideoCapture;
 
 import com.fazecast.jSerialComm.SerialPort;
 
+import danschirripa.javashell.com.ndi.NDISender;
 import danschirripa.javashell.com.visca.Camera;
 import danschirripa.javashell.com.visca.communications.CameraTypeManager;
 import danschirripa.javashell.com.visca.communications.SerialCommunicationsManager;
@@ -51,11 +56,13 @@ public class ViscaControllerFrame extends JFrame {
 	private CascadeClassifier classifier = new CascadeClassifier();
 	private boolean doAutoTrack = false;
 	private Point lastCenterPoint = null;
-	private double distanceRange = 20;
+	private double distanceRange = 100;
 	private Camera cam;
+	private NDISender ndiSender;
 
 	public ViscaControllerFrame() {
 		thisFrame = this;
+		this.ndiSender = new NDISender();
 		this.setTitle("VISCA Controller");
 		JFrame selectionFrame = new JFrame("Interface Selection");
 		SerialPort[] ports = SerialPort.getCommPorts();
@@ -141,6 +148,9 @@ public class ViscaControllerFrame extends JFrame {
 
 		selectionFrame.setContentPane(selectionPanel);
 
+		Point centerPoint = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+		centerPoint.translate(-200, -75);
+		selectionFrame.setLocation(centerPoint);
 		selectionFrame.setVisible(true);
 		selectionFrame.setSize(400, 150);
 	}
@@ -156,7 +166,8 @@ public class ViscaControllerFrame extends JFrame {
 		EventQueue.invokeLater(() -> {
 			GstVideoComponent vc = new GstVideoComponent();
 			String gstreamerString = "v4l2src device=\"/dev/" + dev + "\" ! " + "videoscale ! videoconvert ! "
-					+ "capsfilter caps=video/x-raw,width=800,height=600 ! appsink";
+					+ "capsfilter caps=video/x-raw,width=" + cam.getWidth() + ",height=" + cam.getHeight()
+					+ " ! appsink";
 
 			VideoCapture cap = new VideoCapture(gstreamerString);
 
@@ -165,6 +176,18 @@ public class ViscaControllerFrame extends JFrame {
 					Mat frame = new Mat();
 					cap.read(frame);
 					camPreviewImg = matToBufferedImage(frame);
+					final BufferedImage forNdi = (BufferedImage) camPreviewImg;
+					final int[] argb = forNdi.getRGB(0, 0, forNdi.getWidth(), forNdi.getHeight(), null, 0,
+							forNdi.getWidth());
+					final byte[] rgba = new byte[argb.length * 4];
+
+					for (int i = 0; i < argb.length; i++) {
+						rgba[4 * i] = (byte) ((argb[i] >> 16) & 0xff); // R
+						rgba[4 * i + 1] = (byte) ((argb[i] >> 8) & 0xff); // G
+						rgba[4 * i + 2] = (byte) ((argb[i]) & 0xff); // B
+						rgba[4 * i + 3] = (byte) ((argb[i] >> 24) & 0xff); // A
+					}
+					ndiSender.sendNdiFrame(rgba);
 					repaint();
 					if (doAutoTrack)
 						autoTrack(frame);
@@ -184,7 +207,10 @@ public class ViscaControllerFrame extends JFrame {
 				}
 			};
 
-			setSize(800, 600);
+			Point centerPoint = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
+			centerPoint.translate(-(cam.getWidth() / 2), -(cam.getHeight() / 2));
+			// this.setLocation(centerPoint);
+			setSize(cam.getWidth(), cam.getHeight());
 
 			JLayeredPane layeredPane = new JLayeredPane();
 			layeredPane.setBounds(0, 0, getWidth(), getHeight());
@@ -201,6 +227,8 @@ public class ViscaControllerFrame extends JFrame {
 
 			add(layeredPane);
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+			setJMenuBar(new VISCAMenuBar(man));
 
 			this.setVisible(true);
 
@@ -243,25 +271,28 @@ public class ViscaControllerFrame extends JFrame {
 		if (facesArray.length == 0)
 			return;
 		Rect face = facesArray[0];
-		Point centerPoint = new Point(face.x + (face.width / 2), face.y + (face.height / 2));
+		Point centerPoint = null;
 		for (Rect f : facesArray) {
 			Point nCenterPoint = new Point(f.x + (f.width / 2), f.y + (f.height / 2));
 			if (isInRange(nCenterPoint)) {
 				face = f;
 				centerPoint = nCenterPoint;
+				break;
 			}
 		}
-		lastCenterPoint = centerPoint;
-		System.out.println("Face @ " + centerPoint.toString());
-		man.sendCommand(cam.determinePTZAdjustment(centerPoint));
+		if (!(centerPoint == null)) {
+			lastCenterPoint = centerPoint;
+			System.out.println("Face @ " + centerPoint.toString());
+			man.sendCommand(cam.determinePTZAdjustment(centerPoint));
+		}
 	}
 
 	private boolean isInRange(Point p) {
 		if (lastCenterPoint == null)
 			return true;
-		double dist = Point.distance(p.getX(), p.getY(), lastCenterPoint.getX(), lastCenterPoint.getY());
-		System.out.println(dist);
-		if (dist <= distanceRange)
+		double dist = Math.abs(Point.distance(p.getX(), p.getY(), lastCenterPoint.getX(), lastCenterPoint.getY()));
+		System.out.println("DISTANCE " + dist);
+		if (dist < distanceRange)
 			return true;
 		return false;
 	}

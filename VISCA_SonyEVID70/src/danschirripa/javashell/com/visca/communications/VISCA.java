@@ -45,6 +45,15 @@ public class VISCA {
 	public static final byte[] AF_ON_ZOOM = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x57,
 			(byte) 0x02, (byte) 0xFF };
 
+	public static final byte[] BRIGHTNESS_UP = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x0D,
+			(byte) 0x02, (byte) 0xFF };
+	
+	public static final byte[] BRIGHTNESS_DOWN = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x0D,
+			(byte) 0x03, (byte) 0xFF };
+	
+	public static final byte[] BRIGHTNESS_RESET = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x0D,
+			(byte) 0x00, (byte) 0xFF };
+
 	public static byte[] ptCommand(int direction, byte speed) {
 		byte[] command = new byte[9];
 		command[0] = (byte) 0x81;
@@ -200,7 +209,7 @@ public class VISCA {
 
 		return command;
 	}
-	
+
 	// -2267 - 0 - 2267 is range for full Pan
 	public static byte[] relativePtCommand(int pan, int tilt, byte speed) {
 		byte[] command = new byte[15];
