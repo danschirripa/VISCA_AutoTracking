@@ -1,6 +1,10 @@
 # VISCA_AutoTracking
 VISCA Camera Auto Tracking using jSerialComm and OpenCV
 
+Supports NDI® output for use as remote webcam - http://ndi.tv/
+----- “NDI® is a registered trademark of NewTek, Inc.” -----
+
+
 Tested and working with Sony EVI D-70 on Linux, will not work on Windows (Relies on V4l2 for video transport)
 
 In order to compile/run this code, OpenCV needs to be compiled/installed with GStreamer and Java support.
