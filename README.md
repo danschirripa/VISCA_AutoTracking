@@ -7,7 +7,8 @@ Supports NDI® output for use as remote webcam - http://ndi.tv/</br>
 ----- “NDI® is a registered trademark of NewTek, Inc.” -----
 </p>
 
-Tested and working with Sony EVI D-70 on Linux</br>Will not work on Windows (Relies on V4l2 for video transport via GStreamer)
+Tested and working with Sony EVI D-70 on Linux</br>
+<b>Will not work on Windows</b> (Relies on V4l2 for video transport via GStreamer)
 
 In order to compile/run this code, OpenCV needs to be compiled/installed with GStreamer and Java support.
   </br>The following tutorial is a great resource for preparing the environment
