@@ -8,7 +8,7 @@ public class NDISender {
 	static {
 		try {
 			InputStream libNdiStream = NDISender.class.getResourceAsStream("/libndi.so");
-			File libNdiFile = new File("libndi.so.5.5.3");
+			File libNdiFile = File.createTempFile("libndi", ".so");
 			FileOutputStream libNdiOut = new FileOutputStream(libNdiFile);
 			libNdiOut.write(libNdiStream.readAllBytes());
 			libNdiOut.flush();
@@ -16,7 +16,7 @@ public class NDISender {
 			System.load(libNdiFile.getAbsolutePath());
 
 			InputStream libNdiSenderStream = NDISender.class.getResourceAsStream("/libndisender.so");
-			File libNdiSenderFile = new File("libndisender.so");
+			File libNdiSenderFile = File.createTempFile("libndisender", ".so");
 			FileOutputStream libNdiSenderOut = new FileOutputStream(libNdiSenderFile);
 			libNdiSenderOut.write(libNdiSenderStream.readAllBytes());
 			libNdiSenderOut.flush();
