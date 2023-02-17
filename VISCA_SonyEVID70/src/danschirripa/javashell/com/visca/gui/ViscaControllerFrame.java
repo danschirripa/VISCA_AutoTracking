@@ -59,9 +59,11 @@ public class ViscaControllerFrame extends JFrame {
 	private double distanceRange = 100;
 	private Camera cam;
 	private NDISender ndiSender;
+	private boolean doPreview = true;
 
-	public ViscaControllerFrame() {
+	public ViscaControllerFrame(boolean doPreview) {
 		thisFrame = this;
+		this.doPreview = doPreview;
 		this.ndiSender = new NDISender();
 		this.setTitle("VISCA Controller");
 		JFrame selectionFrame = new JFrame("Interface Selection");
@@ -164,7 +166,6 @@ public class ViscaControllerFrame extends JFrame {
 		man.sendCommand(VISCA.HOME);
 
 		EventQueue.invokeLater(() -> {
-			GstVideoComponent vc = new GstVideoComponent();
 			String gstreamerString = "v4l2src device=\"/dev/" + dev + "\" ! " + "videoscale ! videoconvert ! "
 					+ "capsfilter caps=video/x-raw,width=" + cam.getWidth() + ",height=" + cam.getHeight()
 					+ " ! appsink";
@@ -188,7 +189,8 @@ public class ViscaControllerFrame extends JFrame {
 						rgba[4 * i + 3] = (byte) ((argb[i] >> 24) & 0xff); // A
 					}
 					ndiSender.sendNdiFrame(rgba);
-					repaint();
+					if (doPreview)
+						repaint();
 					if (doAutoTrack)
 						autoTrack(frame);
 				}
@@ -210,7 +212,10 @@ public class ViscaControllerFrame extends JFrame {
 			Point centerPoint = GraphicsEnvironment.getLocalGraphicsEnvironment().getCenterPoint();
 			centerPoint.translate(-(cam.getWidth() / 2), -(cam.getHeight() / 2));
 			// this.setLocation(centerPoint);
-			setSize(cam.getWidth(), cam.getHeight());
+			if (doPreview)
+				setSize(cam.getWidth(), cam.getHeight());
+			else
+				setSize(300, 300);
 
 			JLayeredPane layeredPane = new JLayeredPane();
 			layeredPane.setBounds(0, 0, getWidth(), getHeight());
@@ -222,7 +227,8 @@ public class ViscaControllerFrame extends JFrame {
 			ccp.setOpaque(true);
 			ccp.setBounds(0, getHeight() - 300, 300, 300);
 
-			layeredPane.add(openCvPreview, new Integer(0), 0);
+			if (doPreview)
+				layeredPane.add(openCvPreview, new Integer(0), 0);
 			layeredPane.add(ccp, new Integer(1), 0);
 
 			add(layeredPane);

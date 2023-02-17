@@ -21,9 +21,13 @@ public class Main {
 		configurePaths();
 		Gst.init(Version.BASELINE, "VISCA Interface", args);
 
+		boolean doPreview = true;
+		for (String arg : args) {
+			if (arg.equals("-nopreview"))
+				doPreview = false;
+		}
 		CameraTypeManager.loadCameraTypes();
-		new ViscaControllerFrame();
-
+		new ViscaControllerFrame(doPreview);
 		Gst.main();
 
 	}
