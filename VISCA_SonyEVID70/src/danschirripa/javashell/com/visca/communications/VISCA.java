@@ -47,12 +47,27 @@ public class VISCA {
 
 	public static final byte[] BRIGHTNESS_UP = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x0D,
 			(byte) 0x02, (byte) 0xFF };
-	
+
 	public static final byte[] BRIGHTNESS_DOWN = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x0D,
 			(byte) 0x03, (byte) 0xFF };
-	
+
 	public static final byte[] BRIGHTNESS_RESET = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x0D,
 			(byte) 0x00, (byte) 0xFF };
+
+	public static final byte[] MODE_FULL_AUTO = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x39,
+			(byte) 0x00, (byte) 0xFF };
+
+	public static final byte[] MODE_MANUAL = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x39,
+			(byte) 0x03, (byte) 0xFF };
+
+	public static final byte[] MODE_SHUTTER_PRIORITY = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x39,
+			(byte) 0x0A, (byte) 0xFF };
+
+	public static final byte[] MODE_IRIS_PRIORITY = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x39,
+			(byte) 0x0B, (byte) 0xFF };
+
+	public static final byte[] MODE_BRIGHT = new byte[] { (byte) 0x81, (byte) 0x01, (byte) 0x04, (byte) 0x39,
+			(byte) 0x0D, (byte) 0xFF };
 
 	public static byte[] ptCommand(int direction, byte speed) {
 		byte[] command = new byte[9];

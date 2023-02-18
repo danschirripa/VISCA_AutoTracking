@@ -19,9 +19,11 @@ public class AdvancedPageEventListener implements ActionListener {
 		String actionCommand = e.getActionCommand();
 		switch (actionCommand) {
 		case "focusIn":
+			man.sendCommand(VISCA.AF_OFF);
 			man.sendCommand(VISCA.focusCommand(VISCA.FOCUS_FAR, (byte) 0x07));
 			break;
 		case "focusOut":
+			man.sendCommand(VISCA.AF_OFF);
 			man.sendCommand(VISCA.focusCommand(VISCA.FOCUS_NEAR, (byte) 0x07));
 			break;
 		case "brightUp":
@@ -34,6 +36,7 @@ public class AdvancedPageEventListener implements ActionListener {
 			man.sendCommand(VISCA.BRIGHTNESS_RESET);
 			break;
 		case "af":
+			man.sendCommand(VISCA.AF_ON);
 			man.sendCommand(VISCA.AF_ONE_PRESS);
 			break;
 		case "backlightCompToggle":

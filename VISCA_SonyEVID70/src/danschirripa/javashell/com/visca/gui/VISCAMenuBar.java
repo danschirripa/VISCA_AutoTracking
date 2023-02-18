@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import danschirripa.javashell.com.visca.communications.SerialCommunicationsManager;
+import danschirripa.javashell.com.visca.communications.VISCA;
 
 public class VISCAMenuBar extends JMenuBar {
 	private SerialCommunicationsManager man;
@@ -55,6 +56,39 @@ public class VISCAMenuBar extends JMenuBar {
 
 			JPanel mainPanel = new JPanel();
 			mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
+
+			JPanel modeSelectionPanel = new JPanel();
+			String[] modes = { "Full Auto", "Manual", "Shutter Priority", "Iris Priority", "Bright" };
+			JComboBox<String> modeSelection = new JComboBox<String>(modes);
+			JLabel modeSelectionLabel = new JLabel("Mode: ");
+			modeSelectionLabel.setBackground(new Color(0, 0, 0, 0));
+			modeSelectionLabel.setForeground(Color.WHITE);
+			modeSelection.setBackground(Color.DARK_GRAY);
+			modeSelection.setForeground(Color.WHITE);
+			modeSelection.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					switch (modes[modeSelection.getSelectedIndex()]) {
+					case "Full Auto":
+						man.sendCommand(VISCA.MODE_FULL_AUTO);
+						break;
+					case "Manual":
+						man.sendCommand(VISCA.MODE_MANUAL);
+						break;
+					case "Shutter Priority":
+						man.sendCommand(VISCA.MODE_SHUTTER_PRIORITY);
+						break;
+					case "Iris Priority":
+						man.sendCommand(VISCA.MODE_IRIS_PRIORITY);
+						break;
+					case "Bright":
+						man.sendCommand(VISCA.MODE_BRIGHT);
+						break;
+					}
+				}
+			});
+			modeSelectionPanel.add(modeSelectionLabel);
+			modeSelectionPanel.add(modeSelection);
+			modeSelectionPanel.setBackground(Color.DARK_GRAY);
 
 			JPanel brightnessPanel = new JPanel();
 
@@ -147,6 +181,7 @@ public class VISCAMenuBar extends JMenuBar {
 
 			awbButton.addActionListener(listener);
 
+			mainPanel.add(modeSelectionPanel);
 			mainPanel.add(brightnessPanel);
 			mainPanel.add(focusPanel);
 			mainPanel.add(backlightPanel);
@@ -154,7 +189,7 @@ public class VISCAMenuBar extends JMenuBar {
 
 			setContentPane(mainPanel);
 			mainPanel.setBackground(Color.DARK_GRAY);
-			setSize(250, 300);
+			setSize(250, 375);
 			setVisible(true);
 		}
 	}
