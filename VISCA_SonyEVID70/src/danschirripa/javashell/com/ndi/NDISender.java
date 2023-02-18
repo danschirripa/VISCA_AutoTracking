@@ -3,8 +3,8 @@ package danschirripa.javashell.com.ndi;
 public class NDISender {
 	static {
 		try {
-			System.load("libndi.so");
-			System.load("libndisender.so");
+			System.load("/home/dan/libndi.so");
+			System.load("/home/dan/libndisender.so");
 			System.out.println("LIBRARY LOAD COMPLETED");
 		} catch (Exception e) {
 			e.printStackTrace();
