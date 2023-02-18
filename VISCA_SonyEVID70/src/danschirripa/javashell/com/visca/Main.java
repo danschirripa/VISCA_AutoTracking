@@ -22,12 +22,21 @@ public class Main {
 		Gst.init(Version.BASELINE, "VISCA Interface", args);
 
 		boolean doPreview = true;
+		String videoDev = null;
+		String ttyDev = null;
+		int i = 0;
 		for (String arg : args) {
 			if (arg.equals("-nopreview"))
 				doPreview = false;
+			else if (arg.equals("-video")) {
+				videoDev = args[i + 1];
+			} else if (arg.equals("-tty")) {
+				ttyDev = args[i + 1];
+			}
+			i++;
 		}
 		CameraTypeManager.loadCameraTypes();
-		new ViscaControllerFrame(doPreview);
+		new ViscaControllerFrame(doPreview, videoDev, ttyDev);
 		Gst.main();
 
 	}

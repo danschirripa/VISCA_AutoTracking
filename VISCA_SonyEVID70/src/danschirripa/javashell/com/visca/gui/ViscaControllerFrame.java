@@ -61,11 +61,12 @@ public class ViscaControllerFrame extends JFrame {
 	private NDISender ndiSender;
 	private boolean doPreview = true;
 
-	public ViscaControllerFrame(boolean doPreview) {
+	public ViscaControllerFrame(boolean doPreview, String videoDev, String ttyDev) {
 		thisFrame = this;
 		this.doPreview = doPreview;
 		this.ndiSender = new NDISender();
 		this.setTitle("VISCA Controller");
+
 		JFrame selectionFrame = new JFrame("Interface Selection");
 		SerialPort[] ports = SerialPort.getCommPorts();
 		String[] portNames = new String[ports.length];
