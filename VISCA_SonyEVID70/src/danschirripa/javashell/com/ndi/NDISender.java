@@ -4,7 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+/**
+ * JNI bindings for NDI lib, only supports Sending currently.
+ * 
+ * @author dan
+ *
+ */
 public class NDISender {
+	// Extract and load the NDI libs
 	static {
 		try {
 			InputStream libNdiStream = NDISender.class.getResourceAsStream("/libndi.so");
@@ -29,15 +36,29 @@ public class NDISender {
 		}
 	}
 
-	public NDISender() {
-		initializeNDI();
+	/**
+	 * Create an NDI instance with the specified width and height. NOTE if the
+	 * resolution provided to "sendFrame" does not match the created instance, the
+	 * NDI library will SEGSEV, or other unwanted issues will occur
+	 * 
+	 * @param width  Image width
+	 * @param height Image height
+	 */
+	public NDISender(int width, int height) {
+		initializeNDI(width, height);
 	}
 
+	/**
+	 * Send an RGBA encoded image over NDI, NOTE the width and height of the
+	 * provided image MUST match that which the NDI instance was created with
+	 * 
+	 * @param frame Image to dispatch via NDI
+	 */
 	public void sendNdiFrame(byte[] frame) {
 		sendFrame(frame);
 	}
 
-	private native void initializeNDI();
+	private native void initializeNDI(int width, int height);
 
 	private native void sendFrame(byte[] frame);
 

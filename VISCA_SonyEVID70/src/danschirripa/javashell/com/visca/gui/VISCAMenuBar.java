@@ -19,6 +19,12 @@ import javax.swing.JPanel;
 import danschirripa.javashell.com.visca.communications.SerialCommunicationsManager;
 import danschirripa.javashell.com.visca.communications.VISCA;
 
+/**
+ * JMneuBar for more granular VISCA control
+ * 
+ * @author dan
+ *
+ */
 public class VISCAMenuBar extends JMenuBar {
 	private SerialCommunicationsManager man;
 	private AdvancedPageEventListener listener;
@@ -39,6 +45,13 @@ public class VISCAMenuBar extends JMenuBar {
 		this.setBorderPainted(false);
 	}
 
+	/**
+	 * The advanced frame for advanced VISCA options such as ISO, white balance,
+	 * gamma, etc...
+	 * 
+	 * @author dan
+	 *
+	 */
 	private class AdvancedFrame extends JFrame {
 		public AdvancedFrame() {
 			this.setBackground(Color.DARK_GRAY);

@@ -17,12 +17,12 @@ using namespace std;
 NDIlib_send_instance_t pNDI_send;
 NDIlib_video_frame_v2_t NDI_frame;
 
-JNIEXPORT void JNICALL Java_danschirripa_javashell_com_ndi_NDISender_initializeNDI(JNIEnv *env, jobject thisObj){  
+JNIEXPORT void JNICALL Java_danschirripa_javashell_com_ndi_NDISender_initializeNDI(JNIEnv *env, jobject thisObj, jint width, jint height){  
     NDIlib_send_create_t pNDI_desc;
-    pNDI_desc.p_ndi_name = "VISCA";
+    pNDI_desc.p_ndi_name = "GPHOTO";
     pNDI_send = NDIlib_send_create(&pNDI_desc);
-    NDI_frame.xres = 800;
-    NDI_frame.yres = 600;
+    NDI_frame.xres = width;
+    NDI_frame.yres = height;
     NDI_frame.FourCC = NDIlib_FourCC_type_RGBA;
 }
 

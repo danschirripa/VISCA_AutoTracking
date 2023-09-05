@@ -4,10 +4,24 @@ import java.awt.Point;
 
 import danschirripa.javashell.com.visca.communications.VISCA;
 
+/**
+ * Stores and compute necessary PTZ adjustments based on provided camera
+ * specifications
+ * 
+ * @author dan
+ *
+ */
 public class Camera {
 	private int maximumX, maximumY, imgCenterX, imgCenterY, fovDegrees;
 	private int horizontalAngularChangeMaximum, verticalAngularChangeMaximum;
 
+	/**
+	 * Create a "Camera" object to represent a physical camera
+	 * 
+	 * @param imgWidth   Camera's image resolution width
+	 * @param imgHeight  Camera's image resolution height
+	 * @param fovDegrees The FOV in degrees possible
+	 */
 	public Camera(int imgWidth, int imgHeight, int fovDegrees) {
 		this.maximumX = imgWidth;
 		this.maximumY = imgHeight;
@@ -26,6 +40,14 @@ public class Camera {
 		System.out.println("VerticalAngleMax " + verticalAngularChangeMaximum);
 	}
 
+	/**
+	 * Determine PTZ adjustment to move towards the specified point. If the point is
+	 * already close to the images center point, halt camera motion to prevent
+	 * camera jiggling when movement is not necessary
+	 * 
+	 * @param centerPoint New point to move towards as center
+	 * @return VISCA command translation of point->point translation
+	 */
 	public byte[] determinePTZAdjustment(Point centerPoint) {
 		int x = centerPoint.x;
 		int y = centerPoint.y;

@@ -26,7 +26,10 @@ public class CameraControlPanel extends JPanel {
 	private byte[][] viscaCommands;
 
 	/**
-	 * Create the panel.
+	 * Create a control GUI to interface with VISCA, and toggle autotracking
+	 * 
+	 * @param man Serialport to use for VISCA commands
+	 * @param vf  Top level controller frame for parental reference
 	 */
 	public CameraControlPanel(SerialCommunicationsManager man, ViscaControllerFrame vf) {
 

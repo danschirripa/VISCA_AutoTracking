@@ -1,0 +1,2 @@
+g++ -c -fPIC ./NDISender.cpp -o ndisender.o -I"/home/dan/jdk/jdk-19.0.2/include" -I"/home/dan/jdk/jdk-19.0.2/include/linux" -I"/home/dan/NDI SDK for Linux/include" \n
+g++ -shared -o libndisender.so ndisender.o -Wl,-rpath,/home/dan/eclipse-workspace/GPhoto2NDIConverter/src/danschirripa/javashell/com/ndi/ -L. -l:libndi.so

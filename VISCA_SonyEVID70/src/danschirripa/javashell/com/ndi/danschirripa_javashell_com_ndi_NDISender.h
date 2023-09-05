@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     danschirripa_javashell_com_ndi_NDISender
  * Method:    initializeNDI
- * Signature: ()V
+ * Signature: (II)V
  */
 JNIEXPORT void JNICALL Java_danschirripa_javashell_com_ndi_NDISender_initializeNDI
-  (JNIEnv *, jobject);
+  (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     danschirripa_javashell_com_ndi_NDISender
